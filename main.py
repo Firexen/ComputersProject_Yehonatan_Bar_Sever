@@ -148,8 +148,11 @@ def fit_linear(filename):
             return dataisCol(data), graph_titles
         else:
             return dataisRow(data), graph_titles
-
     fixed_data, final_graph_titles = dataValidation(list2d_data)
+
+    if fixed_data is None:  # if the data isn't right for linear fit, stop the main function
+        return
+
     del final_graph_titles[0][0:2]
     del final_graph_titles[1][0:2]
     x_title_label = ' '.join(final_graph_titles[0])
@@ -210,5 +213,6 @@ def fit_linear(filename):
     plt.ylabel(y_title_label)
     plt.xlabel(x_title_label)
     plt.savefig("linear_fit.svg")
+    return
 
     # Project is Over!
