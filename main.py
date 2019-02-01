@@ -1,5 +1,6 @@
 #   Final project (Linear Fit program)
-# max line length = 79 chars
+#   The main function "fit_linear" will extracts data points from the input file and plots a linear function into
+#   a graph ,according to the data calculations
 
 
 def fit_linear(filename):
@@ -12,27 +13,27 @@ def fit_linear(filename):
 
     for line in tables_data:  # This loop will strip "/n" characters and split the words into lists by whitespace
         line = line.rstrip().split()
-        list2d_data += [line]  # list_data will be a 2D-list of the lines
+        list2d_data += [line]  # list2d_data will be a 2D-list of the lines
 
-    # This function dataValidation checks the data and returns an ordered 2D-list of the data
+    # The function ,dataValidation, checks the data and returns an ordered 2D-list of the data in rows format
     # after testing its validity
 
     def dataValidation(data):
 
-        # Data in Columns function----------------------------------------------------------
+        # Input Data is in Columns format,function--------------------------
 
         def dataisCol(data1):
-            orderedcolslist = []
+            ordered_cols_list = []
             for d in range(len(data1)):  # adding empty  rows lists according to the data's length
-                orderedcolslist.append([])
+                ordered_cols_list.append([])
 
             for rows in data1:
                 list_index = data1.index(rows)
                 for k in range(len(rows)):
-                    orderedcolslist[list_index].append(None)
+                    ordered_cols_list[list_index].append(None)
 
-            flist_len_compare = len(orderedcolslist[1])
-            for rows in orderedcolslist[2:]:  # testing if the rows length are the same as the first list of data points
+            flist_len_compare = len(ordered_cols_list[1])
+            for rows in ordered_cols_list[2:]:  # check if rows length are the same as the first list of data points
                 if len(rows) != flist_len_compare:
                     print("Input file error: Data lists are not the same length.")
                     return
@@ -49,54 +50,53 @@ def fit_linear(filename):
                     i = 0
                     while i < len(data1):
                         for list_index in data1:
-                            orderedcolslist[i][titles_index] = list_index[headers_index]
+                            ordered_cols_list[i][titles_index] = list_index[headers_index]
                             i = i + 1
 
-            for rows in orderedcolslist[1:]:  # conversion of integers/floats strings to floats
+            for rows in ordered_cols_list[1:]:  # conversion of integers/floats strings to floats
                 for c in range(len(rows)):
                     rows[c] = float(rows[c])
         
-            for rows in orderedcolslist[1:]:  # testing if uncertainties are greater than zero
+            for rows in ordered_cols_list[1:]:  # testing if uncertainties are greater than zero
                 dx_uncertainty = rows[1]
                 dy_uncertainty = rows[3]
                 if dx_uncertainty < 0 or dy_uncertainty < 0:
                     print("Input file error: Not all uncertainties",
                                                     "are positive.")
                     return
-            del orderedcolslist[0]
+            del ordered_cols_list[0]
 
-            xcol_to_row = []
-            ycol_to_row = []
-            dxcol_to_row = []
-            dycol_to_row = []
+            x_col_to_row = []  # creating lists for each type of data
+            y_col_to_row = []
+            dx_col_to_row = []
+            dy_col_to_row = []
 
-            for listx in orderedcolslist:  # creating lists for each type of data
-                xcol_to_row.append(listx[0])
-            for listdx in orderedcolslist:
-                dxcol_to_row.append(listdx[1])
+            for listx in ordered_cols_list:
+                x_col_to_row.append(listx[0])
+            for listdx in ordered_cols_list:
+                dx_col_to_row.append(listdx[1])
 
-            for listy in orderedcolslist:
-                ycol_to_row.append(listy[2])
+            for listy in ordered_cols_list:
+                y_col_to_row.append(listy[2])
 
-            for listdy in orderedcolslist:
-                dycol_to_row.append(listdy[3])
-
+            for listdy in ordered_cols_list:
+                dy_col_to_row.append(listdy[3])
 
             new_data_list = []  # creating a list that will contain the data as rows
-            new_data_list.append(xcol_to_row)
-            new_data_list.append(dxcol_to_row)
-            new_data_list.append(ycol_to_row)
-            new_data_list.append(dycol_to_row)
+            new_data_list.append(x_col_to_row)
+            new_data_list.append(dx_col_to_row)
+            new_data_list.append(y_col_to_row)
+            new_data_list.append(dy_col_to_row)
 
             return new_data_list
 
-        # Data in Rows function------------------------------------------------------------------
+        # Input Data is in Rows format,function-----------------------------
          
         def dataisRow(data2):
-            orderedrowslist = []
+            ordered_rows_list = []
 
             for b in range(len(data2)):  # adding empty  rows lists according to the data's length
-                orderedrowslist.append([])
+                ordered_rows_list.append([])
 
             for rows in data2:  # switching the headers to lower case
                 rows[0] = rows[0].lower()
@@ -107,20 +107,20 @@ def fit_linear(filename):
 
                 if headers in titles:
                     titles_index = titles.index(headers)
-                    orderedrowslist[titles_index] = list_index
+                    ordered_rows_list[titles_index] = list_index
 
-            for rows in orderedrowslist:  # conversion of integers/floats strings to floats
+            for rows in ordered_rows_list:  # conversion of integers/floats strings to floats
                 for num_index in range(1, len(rows)):
                     rows[num_index] = float(rows[num_index])
 
-            frow_lencompare = len(orderedrowslist[0])  # the first row of the data
-            for rows in orderedrowslist[1:]:  # comparing data lists length
+            frow_lencompare = len(ordered_rows_list[0])  # the first row of the data
+            for rows in ordered_rows_list[1:]:  # comparing data lists length
                 if len(rows) != frow_lencompare:
                     print("Input file error: Data lists are not the same length.")
                     return
 
-            dx_row = orderedrowslist[1]
-            dy_row = orderedrowslist[3]
+            dx_row = ordered_rows_list[1]
+            dy_row = ordered_rows_list[3]
             for number in dx_row[1:]:  # the following loops will check uncertainties
                 if number < 0:
                     print("Input file error: Not all uncertainties",
@@ -131,10 +131,10 @@ def fit_linear(filename):
                     print("Input file error: Not all uncertainties",
                           "are positive.")
                     return
-            for rows in orderedrowslist:  # deleting the titles for each rows
+            for rows in ordered_rows_list:  # deleting the titles for each rows
                 del rows[0]
 
-            return orderedrowslist
+            return ordered_rows_list
 
         graph_titles = []
         empty_list_index = list2d_data.index([])  # This will find the location of the empty list in the data 2D-list
@@ -143,11 +143,12 @@ def fit_linear(filename):
         graph_titles.remove([])
 
         # This section will check if the data is in rows or columns
-        elementTest = list2d_data[0][1]
-        if elementTest.isalpha():  # if elementTest is alphabetic, return cols function
+        element_test = list2d_data[0][1]
+        if element_test.isalpha():  # if element_test is alphabetic, return cols function
             return dataisCol(data), graph_titles
         else:
             return dataisRow(data), graph_titles
+
     fixed_data, final_graph_titles = dataValidation(list2d_data)
 
     if fixed_data is None:  # if the data isn't right for linear fit, stop the main function
@@ -161,9 +162,8 @@ def fit_linear(filename):
     dx_data = fixed_data[1]
     y_data = fixed_data[2]
     dy_data = fixed_data[3]
-    # part 1 is done!
 
-    def output_calculations(x_data1, dx_data1, y_data1, dy_data1):
+    def fittingCalculations(x_data1, dx_data1, y_data1, dy_data1):
         import math
 
         N = len(y_data1)  # number of points
@@ -173,6 +173,7 @@ def fit_linear(filename):
         xy_mean = 0
         dy_mean2 = 0
         x_mean2 = 0
+
         for k in range(N):  # calculations of the means
             z += 1/(dy_data1[k]**2)
             x_mean += (x_data1[k]/(dy_data1[k])**2)
@@ -198,14 +199,14 @@ def fit_linear(filename):
         chi2_reduced_calc = chi2_calc / (N-2)
         return a_calc, b_calc, da_calc, db_calc, chi2_calc, chi2_reduced_calc
 
-    # part 2 is done !
-
-    a, b, da, db, chi2, chi2_reduced = output_calculations(x_data, dx_data, y_data, dy_data)
+    # printing the fitting calculations results
+    a, b, da, db, chi2, chi2_reduced = fittingCalculations(x_data, dx_data, y_data, dy_data)
     print("a = ", a, "+-", da)
     print("b = ", b, "+-", db)
     print("chi2 = ", chi2)
     print("chi2_reduced = ", chi2_reduced)
 
+    # plotting the linear function into a graph
     x_values = np.array(x_data)
     y_values = a*x_values + b
     plt.plot(x_values, y_values, 'r-')
@@ -214,5 +215,3 @@ def fit_linear(filename):
     plt.xlabel(x_title_label)
     plt.savefig("linear_fit.svg")
     return
-
-    # Project is Over!
