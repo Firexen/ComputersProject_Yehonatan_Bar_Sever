@@ -95,7 +95,7 @@ def fit_linear(filename):
         def dataisRow(data2):
             ordered_rows_list = []
 
-            for b in range(len(data2)):  # adding empty  rows lists according to the data's length
+            for p in range(len(data2)):  # adding empty  rows lists according to the data's length
                 ordered_rows_list.append([])
 
             for rows in data2:  # switching the headers to lower case
@@ -124,12 +124,12 @@ def fit_linear(filename):
             for number in dx_row[1:]:  # the following loops will check uncertainties
                 if number < 0:
                     print("Input file error: Not all uncertainties",
-                          "are positive.")
+                                                    "are positive.")
                     return
             for number in dy_row[1:]:
                 if number < 0:
                     print("Input file error: Not all uncertainties",
-                          "are positive.")
+                                                    "are positive.")
                     return
             for rows in ordered_rows_list:  # deleting the titles for each rows
                 del rows[0]
